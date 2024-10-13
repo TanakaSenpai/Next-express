@@ -33,6 +33,7 @@ export default function Home() {
   useEffect(() => {
     if (message === "article-deleted") toast.error("The article has been deleted.")
     else if (message === "signed-in") toast.warning("You're already signed in!")
+    else if (message === "reg-success") toast.success("Registration successfull!")
   }, [message])
   if (isLoading) return <p>Loading...</p>
   return (

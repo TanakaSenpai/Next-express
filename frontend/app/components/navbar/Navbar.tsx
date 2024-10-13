@@ -21,7 +21,7 @@ const Navbar = () => {
     <nav className="w-full h-16">
       <div className="flex justify-between items-center h-full mx-6 sm:mx-20">
         <Logo />
-        <div className="hidden sm:flex gap-8">
+        <div className="hidden md:flex gap-8">
           {navLinks.map((link) => (
             <Link key={link.href} href={link.href} className={`capitalize ${link.href === pathName && "font-bold"}`}>
               {link.label}
@@ -29,7 +29,7 @@ const Navbar = () => {
           ))}
           <IsLoggedIn />
         </div>
-        <div className="block sm:hidden">
+        <div className="block md:hidden">
           <div className="flex gap-4">
             {session && <p>Welcome, <span className="font-semibold">{ session!.user.name }</span>!</p>}
           <button

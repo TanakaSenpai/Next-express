@@ -8,6 +8,7 @@ import axios from 'axios';
 import api from '@/configs/api';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { signIn } from 'next-auth/react';
 
 const SignUp = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<RegType>({
@@ -17,12 +18,18 @@ const SignUp = () => {
 
   const onSubmit = async (data: RegType) => {
     try {
-      await api.post("/auth/sign-up", {
+      const result = await api.post("/auth/sign-up", {
         name: data.name,
         email: data.email,
         password: data.password
       })
-      router.push("/")
+      if (result.status == 201) {
+        const result = await signIn("credentials", {
+          redirect:false, email: data.email, password: data.password
+        })
+        if (result?.error) toast.error(result.error)
+        else router.push("/?message=reg-success")
+      }
     } catch (error) {
       if (axios.isAxiosError(error)) toast.error(error.response?.data.message || error.response?.data || error.message || "An error has occured.")
       else toast.error((error as Error).message)
