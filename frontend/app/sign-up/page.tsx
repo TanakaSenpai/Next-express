@@ -2,17 +2,28 @@
 import React from 'react'
 import Button from '../components/Button';
 import { useForm } from "react-hook-form";
-import userSchema, { User } from '../schema/user';
+import { registerSchema, RegType } from "../schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from 'axios';
 
 const SignUp = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<User>({
-    resolver: zodResolver(userSchema),
+  const { register, handleSubmit, formState: { errors } } = useForm<RegType>({
+    resolver: zodResolver(registerSchema),
   })
 
-  const onSubmit = (data: User) => {
-    console.log(data);
-    console.log("finish")
+  const onSubmit = async (data: RegType) => {
+    try {
+      const response = await axios.post("http://localhost:8080/auth/sign-up", {
+        name: data.name,
+        email: data.email,
+        password: data.password
+      })
+
+      console.log(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+
   };
 
   return (
@@ -23,32 +34,46 @@ const SignUp = () => {
           className="mt-10 flex flex-col gap-4 w-96"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <input
-            type="text"
-            {...register("name")}
-            className="w-full border py-2 px-4 rounded-md"
-            placeholder="Name"
-          />
-          {errors.name && <p>{errors.name.message}</p>}
-          <input
-            type="email"
-            {...register("email")}
-            className="w-full border py-2 px-4 rounded-md"
-            placeholder="Email"
-          />
-          {errors.email && <p>{errors.email.message}</p>}
-          <input
-            type="password"
-            {...register("password")}
-            className="w-full border py-2 px-4 rounded-md"
-            placeholder="Password"
-          />
-          {errors.password && <p>{errors.password.message}</p>}
-          <input
-            type="password"
-            className="w-full border py-2 px-4 rounded-md"
-            placeholder="Confirm password"
-          />
+          <div>
+            <input
+              type="text"
+              {...register("name")}
+              className="w-full border py-2 px-4 rounded-md"
+              placeholder="Name"
+            />
+            {errors.name && <p className='text-red-400'>{errors.name.message}</p>}
+          </div>
+
+          <div>
+            <input
+              type="email"
+              {...register("email")}
+              className="w-full border py-2 px-4 rounded-md"
+              placeholder="Email"
+            />
+            {errors.email && <p className='text-red-400'>{errors.email.message}</p>}
+          </div>
+
+          <div>
+            <input
+              type="password"
+              {...register("password")}
+              className="w-full border py-2 px-4 rounded-md"
+              placeholder="Password"
+            />
+            {errors.password && <p className='text-red-400'>{errors.password.message}</p>}
+          </div>
+
+          <div>
+            <input
+              type="password"
+              {...register("confirmPassword")}
+              className="w-full border py-2 px-4 rounded-md"
+              placeholder="Confirm password"
+            />
+            {errors.confirmPassword && <p className='text-red-400'>{errors.confirmPassword.message}</p>}
+          </div>
+
           <Button text="Sign up" />
         </form>
       </div>

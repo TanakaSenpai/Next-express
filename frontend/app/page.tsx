@@ -1,6 +1,14 @@
+"use client"
+import { useEffect } from "react";
 import Articles from "./components/Articles";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 export default function Home() {
+  const message = useSearchParams().get("message")
+  useEffect(() => {
+    if (message) toast.warning("You're already signed in!")
+  }, [message])
   
   return (
     <main>
