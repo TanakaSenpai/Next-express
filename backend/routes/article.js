@@ -5,7 +5,7 @@ const Article = require("../models/article")
 
 
 router.get("/articles", async (req, res) => {
-    const articles = await Article.find();
+    const articles = await Article.find().sort({createdAt: -1});
     res.status(200).json(articles);
 })
 

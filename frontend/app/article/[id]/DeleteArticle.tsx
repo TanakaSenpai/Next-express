@@ -1,11 +1,23 @@
+"use client"
 import Button from '@/app/components/Button';
+import api from '@/configs/api';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import React, { FormEvent } from 'react'
+import { toast } from 'sonner';
 
-const DeleteArticle = ({ onClose }: { onClose: () => void }) => {
+const DeleteArticle = ({ onClose, articleId }: { onClose: () => void, articleId: string }) => {
+    const router = useRouter();
     
-    const onSubmit = (e: FormEvent) => {
+    const onSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        console.log("Deleted")
+        try {
+            await api.delete(`/article/delete/${articleId}`)
+            router.push("/?message=article-deleted")
+        } catch (error) {
+            if (axios.isAxiosError(error)) toast.error(error.response?.data.message || error.response?.data || "And error occurred")
+            else toast.error((error as Error).message || "Error")
+        }
     }
     
   return (
@@ -18,7 +30,7 @@ const DeleteArticle = ({ onClose }: { onClose: () => void }) => {
                       <Button text='Ok' color='bg-red-400' />
                   </div>
                   <div onClick={onClose}>
-                      <Button text='Cancel' color='bg-gray-500' />
+                      <Button type='button' text='Cancel' color='bg-gray-500' />
                   </div>
               </div>
           </div>

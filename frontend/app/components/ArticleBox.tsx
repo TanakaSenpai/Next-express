@@ -13,7 +13,6 @@ const ArticleBox = ({ article }: { article: articleType }) => {
       try {
         const response = await api.get(`/api/user/getname/${article.authorId}`);
         const name = response.data.name;
-        console.log(name);
         setName(name)
       } catch (error) {
         if (axios.isAxiosError(error)) toast.error(error.response?.data.message)

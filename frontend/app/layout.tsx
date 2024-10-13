@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar/Navbar";
 import { Toaster } from "sonner";
 import AuthProvider from "./providers/AuthProvider";
 

@@ -98,7 +98,7 @@ const Article = ({ params }: { params: { id: string } }) => {
           <div onClick={() => setDelete(true)}>
             <Button color="bg-red-400 hover:bg-red-500" text="Delete Article" />
           </div>
-          {showDelete && <DeleteArticle onClose={() => setDelete(false)} />}
+          {showDelete && <DeleteArticle articleId={article._id!} onClose={() => setDelete(false)} />}
         </div>
       )}
       <p className="text-xl text-start lg:mx-20 mt-16">{article.content}</p>

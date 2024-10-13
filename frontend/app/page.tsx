@@ -7,7 +7,8 @@ import { toast } from "sonner";
 export default function Home() {
   const message = useSearchParams().get("message")
   useEffect(() => {
-    if (message) toast.warning("You're already signed in!")
+    if (message === "article-deleted") toast.error("The article has been deleted.")
+    else if (message === "signed-in") toast.warning("You're already signed in!")
   }, [message])
   
   return (
