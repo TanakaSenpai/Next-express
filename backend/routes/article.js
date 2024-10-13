@@ -17,6 +17,15 @@ router.get("/article/:id", async (req, res) => {
     else return res.status(404).json({message: "Article not found"})
 })
 
+router.get("/my-articles/:id", async (req, res) => {
+    const authorId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(authorId)) return res.status(404).json({message: "Invalid author id"})
+    const articles = await Article.find({authorId});
+
+    if (articles) return res.status(200).json(articles);
+    else return res.status(404).json({message: "Article not found"})
+});
+
 router.post("/create", async (req, res) => {
     try {
         const { title, content, authorId, categories } = req.body;   

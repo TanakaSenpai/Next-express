@@ -10,7 +10,7 @@ import api from "@/configs/api";
 import { toast } from "sonner";
 
 const Article = ({ params }: { params: { id: string } }) => {
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [showEdit, setEdit] = useState(false);
   const [showDelete, setDelete] = useState(false);
   const [name, setName] = useState("");
@@ -21,16 +21,13 @@ const Article = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const getArticle = async () => {
-      setLoading(true);
       try {
         const result = await api(`/article/article/${articleId}`);
         setArticle(result.data);
       } catch (error) {
         if (axios.isAxiosError(error))
           toast.error(error.response?.data.message || "An error occurred");
-        // Improved error handling
         else toast.error((error as Error).message);
-        console.log(error);
       } finally {
         setLoading(false); 
       }
@@ -68,8 +65,7 @@ const Article = ({ params }: { params: { id: string } }) => {
   if (isLoading) return <p>Loading...</p>;
   if (!article)
     return <p className="text-red-400 text-4xl text-center m-10">Not found</p>;
-
-  return (
+  else if (article) return (
     <div className="flex flex-col gap-2 items-center m-5 text-center">
       <p className="text-4xl">{article.title}</p>
       <p>
@@ -79,29 +75,31 @@ const Article = ({ params }: { params: { id: string } }) => {
         {new Date(article.createdAt).toLocaleString()}
       </p>
       <p className="text-gray-500">{article.categories}</p>
-      {article.authorId === session?.user.id && (
-        <div className="flex justify-end gap-2 w-full">
-          <div onClick={() => setEdit(true)}>
-            <Button text="Edit Article" />
+      <div className="flex justify-center sm:justify-end">
+        {article.authorId === session?.user.id && (
+          <div className="flex justify-end gap-2 w-full">
+            <div onClick={() => setEdit(true)}>
+              <Button text="Edit Article" />
+            </div>
+            {showEdit && (
+              <EditArticle
+                onClose={() => setEdit(false)}
+                article={article}
+                onUpdate={(updatedArticle: articleType) => {
+                  setArticle(updatedArticle)
+                  setEdit(false)
+                }
+                }
+              />
+            )}
+            <div onClick={() => setDelete(true)}>
+              <Button color="bg-red-400 hover:bg-red-500" text="Delete Article" />
+            </div>
+            {showDelete && <DeleteArticle articleId={article._id!} onClose={() => setDelete(false)} />}
           </div>
-          {showEdit && (
-            <EditArticle
-              onClose={() => setEdit(false)}
-              article={article}
-              onUpdate={(updatedArticle: articleType) => {
-                setArticle(updatedArticle)
-                setEdit(false)
-              }
-              }
-            />
-          )}
-          <div onClick={() => setDelete(true)}>
-            <Button color="bg-red-400 hover:bg-red-500" text="Delete Article" />
-          </div>
-          {showDelete && <DeleteArticle articleId={article._id!} onClose={() => setDelete(false)} />}
-        </div>
-      )}
-      <p className="text-xl text-start lg:mx-20 mt-16">{article.content}</p>
+        )}
+      </div>
+      <p className="text-lg sm:text-xl text-start lg:mx-20 mt-16">{article.content}</p>
     </div>
   );
 };

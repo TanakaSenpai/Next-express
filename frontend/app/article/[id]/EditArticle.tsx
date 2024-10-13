@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import articleSchema, { articleType } from "@/app/schema/article";
 import { toast } from "sonner";
 import axios from "axios";
+import api from "@/configs/api";
 
 const EditArticle = ({
   onClose,
@@ -26,7 +27,7 @@ const EditArticle = ({
   const onSubmit = async (data: articleType) => {
     data._id = article._id;
     try {
-      const result = await axios.post(`http://localhost:8080/article/update`, data);
+      const result = await api.post(`/article/update`, data);
       toast.success("Article updated successfully.");
       onUpdate(result.data.article)
       reset();

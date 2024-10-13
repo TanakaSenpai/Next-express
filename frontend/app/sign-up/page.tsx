@@ -5,23 +5,27 @@ import { useForm } from "react-hook-form";
 import { registerSchema, RegType } from "../schema/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from 'axios';
+import api from '@/configs/api';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 const SignUp = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<RegType>({
     resolver: zodResolver(registerSchema),
   })
+  const router = useRouter()
 
   const onSubmit = async (data: RegType) => {
     try {
-      const response = await axios.post("http://localhost:8080/auth/sign-up", {
+      await api.post("/auth/sign-up", {
         name: data.name,
         email: data.email,
         password: data.password
       })
-
-      console.log(response.data)
+      router.push("/")
     } catch (error) {
-      console.log(error)
+      if (axios.isAxiosError(error)) toast.error(error.response?.data.message || error.response?.data || error.message || "An error has occured.")
+      else toast.error((error as Error).message)
     }
 
   };

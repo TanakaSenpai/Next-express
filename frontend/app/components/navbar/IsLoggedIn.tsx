@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 
+const IsLoggedIn = ({ styles }: { styles?: string }) => {
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
 
-const IsLoggedIn = ({styles} : {styles?: string}) => {
-      const { data: session } = useSession();
+  if (loading) return <p>Loading...</p>;
   return (
     <div>
       {session ? (
