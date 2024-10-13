@@ -6,7 +6,13 @@ import axios from "axios";
 import { toast } from "sonner";
 import api from "@/configs/api";
 
-const AddArticle = ({ authorId, onClose }: { authorId: string; onClose: () => void }) => {
+interface Props {
+  authorId: string;
+  onClose: () => void;
+  updateArticles: (updateArticles: articleType[]) => void;
+}
+
+const AddArticle = ({ authorId, onClose, updateArticles }: Props) => {
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<articleType>({
     resolver: zodResolver(articleSchema)
@@ -17,17 +23,17 @@ const AddArticle = ({ authorId, onClose }: { authorId: string; onClose: () => vo
     try {
       const response = await api.post("/article/create", data);
       toast.success(response.data.message)
+      updateArticles(response.data.articles)
       reset()
+      onClose()
     } catch (error) {
      if (axios.isAxiosError(error)) {
-      // Check if the error response exists and has a message
       if (error.response && error.response.data && error.response.data.message) {
         toast.error(error.response.data.message);
       } else {
         toast.error("Something went wrong with the request.");
       }
     } else {
-      // Handle non-Axios errors (unexpected errors)
       toast.error((error as Error).message || "An unexpected error occurred.");
       }
     }

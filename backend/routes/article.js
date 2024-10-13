@@ -20,7 +20,7 @@ router.get("/article/:id", async (req, res) => {
 router.get("/my-articles/:id", async (req, res) => {
     const authorId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(authorId)) return res.status(404).json({message: "Invalid author id"})
-    const articles = await Article.find({authorId});
+    const articles = await Article.find({authorId}).sort({createdAt: -1});
 
     if (articles) return res.status(200).json(articles);
     else return res.status(404).json({message: "Article not found"})
@@ -31,7 +31,8 @@ router.post("/create", async (req, res) => {
         const { title, content, authorId, categories } = req.body;   
         const newArticle = new Article({ title, content, authorId, categories });
         await newArticle.save();
-        res.status(200).json({message: "Article saved successfully."})
+        const articles = await Article.find({authorId}).sort({createdAt: -1})
+        res.status(200).json({message: "Article saved successfully.", articles: articles});
     } catch (error) {
         res.status(500).json({message: "Error creating article: " + error.message});
     }

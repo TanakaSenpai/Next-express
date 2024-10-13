@@ -75,9 +75,9 @@ const Article = ({ params }: { params: { id: string } }) => {
         {new Date(article.createdAt).toLocaleString()}
       </p>
       <p className="text-gray-500">{article.categories}</p>
-      <div className="flex justify-center sm:justify-end">
+      <div className="flex justify-center sm:justify-end w-full">
         {article.authorId === session?.user.id && (
-          <div className="flex justify-end gap-2 w-full">
+          <div className="flex justify-center sm:justify-end gap-2 w-full">
             <div onClick={() => setEdit(true)}>
               <Button text="Edit Article" />
             </div>

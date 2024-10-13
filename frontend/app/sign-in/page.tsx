@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 
 const SignIn = () => {
@@ -59,6 +60,8 @@ const SignIn = () => {
             placeholder="Password"
           />
           {errors.password && <p>{errors.password.message}</p>}
+
+          <p>New user? Register <Link href="/sign-up" className="text-blue-500 underline">here</Link>.</p>
 
           <Button text="Sign in" />
         </form>

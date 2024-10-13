@@ -56,12 +56,13 @@ const MyArticles = () => {
         <AddArticle
           authorId={session!.user.id!}
           onClose={() => setShowing(false)}
+          updateArticles={(updateArticle: articleType[]) => setArticles(updateArticle)}
         />
       )}
-      {articles ? (
-        <Articles articles={articles} />
+      {!articles === null ? (
+        <p className="text-4xl text-center text-red-400">No articles found</p>
       ) : (
-        <p className="text-xl text-center text-red-400">Not found</p>
+        <Articles articles={articles} />
       )}
     </div>
   );
